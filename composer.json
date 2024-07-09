@@ -1,0 +1,57 @@
+{
+    "name": "processton-io/processton-user",
+    "description": "Processton Interactions to manage users",
+    "version": "1.0.0",
+    "keywords": [
+        "processton",
+        "processton-user"
+    ],
+    "homepage": "https://github.com/processton-io/processton-user",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Ahmad Faryab Kokab",
+            "email": "ahmadkokab@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "inertiajs/inertia-laravel": "^0.6.9",
+        "processton-io/processton-client": "^1.0",
+        "processton-io/processton-object": "^1.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Processton\\ProcesstonUser\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Processton\\ProcesstonUser\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Processton\\ProcesstonUser\\ProcesstonUserServiceProvider"
+            ],
+            "aliases": {
+                "ProcesstonUser": "Processton\\ProcesstonUser\\ProcesstonUserFacade"
+            }
+        }
+    }
+}
