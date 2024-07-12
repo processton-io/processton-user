@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreign('role_id')->references('id')->on('roles');
             $table->tinyInteger('is_active')->default(1);
             $table->string('note')->nullable();
+            $table->string('default_app')->nullable();
         });
     }
 

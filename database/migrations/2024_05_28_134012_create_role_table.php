@@ -17,6 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('name');
             $table->tinyInteger('is_default')->default(0);
+            $table->string('default_app')->nullable();
             $table->timestamps();
         });
         $this->processObjects([

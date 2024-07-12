@@ -1,5 +1,6 @@
 <?php
 use Processton\ProcesstonUser\Http\Controllers\ProcesstonUserController;
+use Processton\ProcesstonUser\Http\Controllers\ProcesstonRoleController;
 use Processton\ProcesstonUser\Http\Controllers\ProcesstonUserStatsController;
 
 
@@ -11,7 +12,12 @@ Route::middleware([
     Route::any('/invite', [ProcesstonUserController::class, 'invite'])->name('processton-app-user.invite');
     Route::any('/block', [ProcesstonUserController::class, 'blockUser'])->name('processton-app-user.block');
     Route::any('/un-block', [ProcesstonUserController::class, 'allowUser'])->name('processton-app-user.un_block');
-    
+
+    Route::prefix('role')->group(function () {
+        Route::get('/list', [ProcesstonRoleController::class, 'index'])->name('processton-app-user-roles.index');
+        Route::get('/create', [ProcesstonRoleController::class, 'addRole'])->name('processton-app-user-roles.create');
+        Route::get('/edit', [ProcesstonRoleController::class, 'editRole'])->name('processton-app-user-roles.edit');
+    });
     
     Route::group(['prefix' => 'stats'], function () {
         Route::get('/count', [ProcesstonUserStatsController::class, 'usersCount'])->name('processton-app-user.stats.count');

@@ -10,7 +10,19 @@ return [
             "label" => "Users",
             "slug" => "users",
             "icon" => "user",
-            "permission" => [],
+            "permission" => [
+                'admin.setup.users'
+            ],
+            "hidden_links" => [
+            ]
+        ],
+        [
+            "label" => "Roles",
+            "slug" => "roles",
+            "icon" => "award",
+            "permission" => [
+                'admin.setup.roles'
+            ],
             "hidden_links" => [
             ]
         ]
@@ -85,6 +97,75 @@ return [
                 ],
             ]
         ],
+        [
+            "slug" => "roles",
+            'title' => 'Roles',
+            'subtitle' => '',
+            'icon' => 'award',
+            "schema" => [
+                'breadcrumbs' => [
+                    [
+                        'label' => 'Dashboard',
+                        'slug' => 'dashboard',
+                        'icon' => 'pie-chart'
+                    ],
+                    [
+                        'label' => 'Roles',
+                        'slug' => 'roles',
+                        'icon' => 'award'
+                    ]
+                ],
+                'header_actions' => [
+                    [
+                        'type' => 'model',
+                        'label' => 'Add',
+                        'icon' => 'plus',
+                        'color' => 'primary',
+                        'permission' => [],
+                        'action' => '/users/roles/create'
+                    ]
+                ],
+                'filters' => [
+
+                ],
+                'elements' => [
+                    [
+                        'type' => 'row',
+                        'width' => [
+                            'xxxs' => 12,
+                            'xxs' => 12,
+                            'xs' => 12,
+                            'sm' => 12,
+                            'md' => 12,
+                            'lg' => 12,
+                            'xl' => 12,
+                            'xxl' => 12,
+                            'xxxl' => 12,
+                        ],
+                        'elements' => [
+                            [
+                                'type' => 'data_table',
+                                'title' => '',
+                                'srcOfData' => [
+                                    'api_endpoint' => '/users/roles/list',
+                                ],
+                                'width' => [
+                                    'xxxs' => 12,
+                                    'xxs' => 12,
+                                    'xs' => 12,
+                                    'sm' => 12,
+                                    'md' => 12,
+                                    'lg' => 12,
+                                    'xl' => 12,
+                                    'xxl' => 12,
+                                    'xxxl' => 12,
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+            ]
+        ]
 
     ],
 
