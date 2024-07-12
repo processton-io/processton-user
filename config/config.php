@@ -122,7 +122,7 @@ return [
                         'icon' => 'plus',
                         'color' => 'primary',
                         'permission' => [],
-                        'action' => '/users/roles/create'
+                        'action' => '/users/role/create'
                     ]
                 ],
                 'filters' => [
@@ -147,7 +147,7 @@ return [
                                 'type' => 'data_table',
                                 'title' => '',
                                 'srcOfData' => [
-                                    'api_endpoint' => '/users/roles/list',
+                                    'api_endpoint' => '/users/role/list',
                                 ],
                                 'width' => [
                                     'xxxs' => 12,

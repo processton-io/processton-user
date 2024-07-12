@@ -28,7 +28,7 @@ class ProcesstonRoleController
                 [
                     'type' => 'model',
                     'label' => 'Edit',
-                    'action' => '/users/roles/edit',
+                    'action' => '/users/role/edit',
                     'color' => 'primary',
                     'attachments' => [
                         [
@@ -128,7 +128,7 @@ class ProcesstonRoleController
                         'interaction_slug' => 'roles'
                     ])
                 ],
-                'message' => 'New Role is created'
+                'message' => 'New Role is updated'
             ]);
         }
 
