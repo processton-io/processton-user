@@ -15,8 +15,8 @@ Route::middleware([
 
     Route::prefix('role')->group(function () {
         Route::get('/list', [ProcesstonRoleController::class, 'index'])->name('processton-app-user-roles.index');
-        Route::get('/create', [ProcesstonRoleController::class, 'addRole'])->name('processton-app-user-roles.create');
-        Route::get('/edit', [ProcesstonRoleController::class, 'editRole'])->name('processton-app-user-roles.edit');
+        Route::any('/create', [ProcesstonRoleController::class, 'addRole'])->name('processton-app-user-roles.create');
+        Route::any('/edit', [ProcesstonRoleController::class, 'editRole'])->name('processton-app-user-roles.edit');
     });
     
     Route::group(['prefix' => 'stats'], function () {

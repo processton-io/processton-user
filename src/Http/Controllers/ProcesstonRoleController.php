@@ -80,7 +80,7 @@ class ProcesstonRoleController
                     ProcesstonInteraction::generateRow([
                         ProcesstonForm::generateForm(
                             'Add new role',
-                            route('processton-app-user.invite'),
+                            route('processton-app-user-role.create'),
                             ProcesstonForm::generateFormSchema(
                                 'Add new role',
                                 'create',
@@ -144,7 +144,7 @@ class ProcesstonRoleController
                     ProcesstonInteraction::generateRow([
                         ProcesstonForm::generateForm(
                             'Edit Role '.$role->name,
-                            route('processton-app-user.invite'),
+                            route('processton-app-role.edit',[ 'id' => $id ]),
                             ProcesstonForm::generateFormSchema(
                                 'Edit Role '.$role->name,
                                 'edit',
