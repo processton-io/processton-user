@@ -268,5 +268,18 @@ return [
         'user-invitation' => App\Resolvers\User\UserInvitationResolver::class,
         'user-block' => App\Resolvers\User\UserBlockResolver::class,
         'user-un-block' => App\Resolvers\User\UserUnBlockResolver::class,
+    ],
+
+    'permission_mappings' => [
+        'admin.setup.users' => [
+            'category' => 'Admin',
+            'sub_category' => 'Setup',
+            'name' => 'Users'
+        ],
+        'admin.setup.roles' => [
+            'category' => 'Admin',
+            'sub_category' => 'Setup',
+            'name' => 'Roles'
+        ],
     ]
 ];

@@ -13,9 +13,9 @@ use Illuminate\Support\Str;
 
 class ProcesstonRoleController
 {
-    public function index() : JsonResponse
+    public function index(): JsonResponse
     {
-        
+
         $data = Role::paginate();
 
         return response()->json([
@@ -36,14 +36,26 @@ class ProcesstonRoleController
                             'value' => 'id'
                         ]
                     ]
+                ],
+                [
+                    'type' => 'model',
+                    'label' => 'Permissions',
+                    'action' => '/users/role/permissions',
+                    'color' => 'primary',
+                    'attachments' => [
+                        [
+                            'key' => 'id',
+                            'value' => 'id'
+                        ]
+                    ]
                 ]
             ])
         ]);
     }
 
-    public function addRole(Request $request) : JsonResponse
+    public function addRole(Request $request): JsonResponse
     {
-        if($request->method() == 'POST'){
+        if ($request->method() == 'POST') {
 
             $requestData = $request->validate([
                 'name' => 'required|string|max:255|unique:roles'
@@ -77,45 +89,46 @@ class ProcesstonRoleController
                 [],
                 [],
                 [
-                    ProcesstonInteraction::generateRow([
-                        ProcesstonForm::generateForm(
-                            'Add new role',
-                            route('processton-app-user-roles.create'),
-                            ProcesstonForm::generateFormSchema(
+                    ProcesstonInteraction::generateRow(
+                        [
+                            ProcesstonForm::generateForm(
                                 'Add new role',
-                                'create',
-                                ProcesstonForm::generateFormRows(
-                                    ProcesstonForm::generateFormRow([
-                                        ProcesstonForm::generateFormRowElement('Name', 'text', 'name', 'Name', true)
-                                    ])
-                                )
-                            ),
-                            [],
-                            [],
-                            '',
-                            ProcesstonInteraction::width(12, 12, 12)
-                        )
-                    ],
-                    ProcesstonInteraction::width(12, 12, 12)
-                ),
+                                route('processton-app-user-roles.create'),
+                                ProcesstonForm::generateFormSchema(
+                                    'Add new role',
+                                    'create',
+                                    ProcesstonForm::generateFormRows(
+                                        ProcesstonForm::generateFormRow([
+                                            ProcesstonForm::generateFormRowElement('Name', 'text', 'name', 'Name', true)
+                                        ])
+                                    )
+                                ),
+                                [],
+                                [],
+                                '',
+                                ProcesstonInteraction::width(12, 12, 12)
+                            )
+                        ],
+                        ProcesstonInteraction::width(12, 12, 12)
+                    ),
                 ]
             )
         ]);
     }
 
-    public function editRole(Request $request) : JsonResponse
+    public function editRole(Request $request): JsonResponse
     {
         $id = $request->get('id');
 
         $role = Role::findOrFail($id);
 
-        if($request->method() == 'POST'){
+        if ($request->method() == 'POST') {
 
             $requestData = $request->validate([
                 'name' => 'required|string|max:255|unique:roles'
             ]);
 
-            $role->__set('name' , $requestData['name']);
+            $role->__set('name', $requestData['name']);
 
             $role->save();
 
@@ -141,30 +154,31 @@ class ProcesstonRoleController
                 [],
                 [],
                 [
-                    ProcesstonInteraction::generateRow([
-                        ProcesstonForm::generateForm(
-                            'Edit Role '.$role->name,
-                            route('processton-app-user-roles.edit',[ 'id' => $id ]),
-                            ProcesstonForm::generateFormSchema(
-                                'Edit Role '.$role->name,
-                                'edit',
-                                ProcesstonForm::generateFormRows(
-                                    ProcesstonForm::generateFormRow([
-                                        ProcesstonForm::generateFormRowElement('Name', 'text', 'name', 'Name', true)
-                                    ])
-                                )
-                            ),
-                            $role->toArray(),
-                            [],
-                            '',
-                            ProcesstonInteraction::width(12, 12, 12)
-                        )
-                    ],
-                    ProcesstonInteraction::width(12, 12, 12)
-                ),
+                    ProcesstonInteraction::generateRow(
+                        [
+                            ProcesstonForm::generateForm(
+                                'Edit Role ' . $role->name,
+                                route('processton-app-user-roles.edit', ['id' => $id]),
+                                ProcesstonForm::generateFormSchema(
+                                    'Edit Role ' . $role->name,
+                                    'edit',
+                                    ProcesstonForm::generateFormRows(
+                                        ProcesstonForm::generateFormRow([
+                                            ProcesstonForm::generateFormRowElement('Name', 'text', 'name', 'Name', true)
+                                        ])
+                                    )
+                                ),
+                                $role->toArray(),
+                                [],
+                                '',
+                                ProcesstonInteraction::width(12, 12, 12)
+                            )
+                        ],
+                        ProcesstonInteraction::width(12, 12, 12)
+                    ),
                 ]
             )
         ]);
     }
-    
+
 }

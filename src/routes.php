@@ -2,6 +2,7 @@
 use Processton\ProcesstonUser\Http\Controllers\ProcesstonUserController;
 use Processton\ProcesstonUser\Http\Controllers\ProcesstonRoleController;
 use Processton\ProcesstonUser\Http\Controllers\ProcesstonUserStatsController;
+use Processton\ProcesstonUser\Http\Controllers\ProcesstonPermissionController;
 
 
 Route::middleware([
@@ -17,8 +18,10 @@ Route::middleware([
         Route::get('/list', [ProcesstonRoleController::class, 'index'])->name('processton-app-user-roles.index');
         Route::any('/create', [ProcesstonRoleController::class, 'addRole'])->name('processton-app-user-roles.create');
         Route::any('/edit', [ProcesstonRoleController::class, 'editRole'])->name('processton-app-user-roles.edit');
+        Route::any('/permissions', [ProcesstonPermissionController::class, 'index'])->name('processton-app-user-roles.permissions');
+        Route::get('/scan-permissions', [ProcesstonPermissionController::class, 'scanForPermissions'])->name('processton-app-user-roles.scan_permissions');
     });
-    
+
     Route::group(['prefix' => 'stats'], function () {
         Route::get('/count', [ProcesstonUserStatsController::class, 'usersCount'])->name('processton-app-user.stats.count');
         Route::get('/count_new', [ProcesstonUserStatsController::class, 'newUsersCount'])->name('processton-app-user.stats.count_new');
@@ -26,7 +29,7 @@ Route::middleware([
         Route::get('/count_pending_validations', [ProcesstonUserStatsController::class, 'pendingValidations'])->name('processton-app-user.stats.count_pending_validations');
         Route::get('/count_session_duration', [ProcesstonUserStatsController::class, 'sessionsDuration'])->name('processton-app-user.stats.count_session_duration');
     });
-    
+
 });
 
 
