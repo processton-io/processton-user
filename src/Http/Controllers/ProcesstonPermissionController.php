@@ -22,13 +22,14 @@ class ProcesstonPermissionController
 
         if($request->method() == 'POST'){
 
-            $requestData = $request->validate([
-                'name' => 'required|string|max:255|unique:roles'
-            ]);
-
-            $role->__set('name' , $requestData['name']);
-
-            $role->save();
+            $perms = Permission::all();
+            foreach($perms as $perm){
+                if($request->get($perm->key , false) == true){
+                    $role->givePermissionTo($perm);
+                }else{
+                    $role->revokePermissionTo($perm);
+                }
+            }
 
 
             return response()->json([
@@ -39,7 +40,7 @@ class ProcesstonPermissionController
                         'interaction_slug' => 'roles'
                     ])
                 ],
-                'message' => 'New Role is updated'
+                'message' => 'Permissions updated'
             ]);
         }
 
@@ -49,14 +50,19 @@ class ProcesstonPermissionController
             $permissionsGroup[$category] = $permission->groupBy('sub_category');
         }
 
-        $form = [];
+        $rows = [];
+
+        $values = [];
 
         foreach ($permissionsGroup as $category => $permissionCategory) {
-            $rows = [];
+            
             foreach($permissionCategory as $subcat => $permissions){
                 $elements = [];
                 foreach($permissions as $permission){
                     $elements[] = ProcesstonForm::generateFormRowElement($permission->name, 'checkbox', $permission->key, false, false);
+                    if($role->hasPermissionTo($permission->key)){
+                        $values[$permission->key] = true;
+                    }
                 }
                 $rows[] = ProcesstonForm::generateFormRow(
                     $elements,
@@ -67,7 +73,7 @@ class ProcesstonPermissionController
             }
 
         }
-
+        
         return response()->json([
             'interaction' => ProcesstonInteraction::generateInteraction(
                 'Dashboard',
@@ -80,13 +86,13 @@ class ProcesstonPermissionController
                     ProcesstonInteraction::generateRow([
                         ProcesstonForm::generateForm(
                             'Edit Role '.$role->name,
-                            route('processton-app-user-roles.edit',[ 'id' => $id ]),
+                            route('processton-app-user-roles.permissions',[ 'id' => $id ]),
                             ProcesstonForm::generateFormSchema(
                                 'Edit Role '.$role->name,
                                 'edit',
                                 ProcesstonForm::generateFormRows(...$rows)
                             ),
-                            [],
+                            $values,
                             [],
                             '',
                             ProcesstonInteraction::width(12, 12, 12)
