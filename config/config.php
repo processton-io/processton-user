@@ -268,18 +268,44 @@ return [
         'user-invitation' => App\Resolvers\User\UserInvitationResolver::class,
         'user-block' => App\Resolvers\User\UserBlockResolver::class,
         'user-un-block' => App\Resolvers\User\UserUnBlockResolver::class,
+        'reset-password-email' => App\Resolvers\User\UserResetPasswordResolver::class,
     ],
 
     'permission_mappings' => [
         'admin.setup.users' => [
             'category' => 'Admin',
             'sub_category' => 'Setup',
-            'name' => 'Users'
+            'name' => 'Users List'
+        ],
+        'admin.setup.users.block' => [
+            'category' => 'Admin',
+            'sub_category' => 'Setup',
+            'name' => 'Block User'
+        ],
+        'admin.setup.users.unblock' => [
+            'category' => 'Admin',
+            'sub_category' => 'Setup',
+            'name' => 'Enable User'
+        ],
+        'admin.setup.users.resetpassword' => [
+            'category' => 'Admin',
+            'sub_category' => 'Setup',
+            'name' => 'Reset Password Email'
         ],
         'admin.setup.roles' => [
             'category' => 'Admin',
             'sub_category' => 'Setup',
             'name' => 'Roles'
+        ],
+        'admin.setup.roles.edit' => [
+            'category' => 'Admin',
+            'sub_category' => 'Setup',
+            'name' => 'Edit Role'
+        ],
+        'admin.setup.roles.permissions' => [
+            'category' => 'Admin',
+            'sub_category' => 'Setup',
+            'name' => 'Edit Role Permission'
         ],
     ]
 ];

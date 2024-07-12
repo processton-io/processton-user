@@ -11,6 +11,7 @@ use Processton\ProcesstonInteraction\ProcesstonInteractionWidth;
 use Processton\ProcesstonUser\Models\Permission;
 use Processton\ProcesstonUser\Models\Role;
 use Illuminate\Support\Str;
+use Processton\ProcesstonUser\Static\PermissionsMapping;
 
 class ProcesstonPermissionController
 {
@@ -123,7 +124,7 @@ class ProcesstonPermissionController
 
         foreach ($permissions as $permission) {
 
-            $mapping = $this->getMappings($permission);
+            $mapping = PermissionsMapping::getMapping($permission);
 
             Permission::updateOrCreate([
                 'key' => $permission
@@ -134,12 +135,6 @@ class ProcesstonPermissionController
             ]);
 
         }
-    }
-
-    protected function getMappings($permission)
-    {
-        $mappings = config('module-user.permission_mappings');
-        return array_key_exists($permission, $mappings) ? $mappings[$permission] : [];
     }
     
 }

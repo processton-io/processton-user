@@ -26,6 +26,10 @@ class ProcesstonUserServiceProvider extends ServiceProvider
                 __DIR__.'/../config/config.php' => config_path('module-user.php'),
             ], 'config');
 
+            $this->publishes([
+                __DIR__.'/../Resolvers/' => app_path('Resolvers/User/'),
+            ], 'lang');
+
             // Publishing the views.
             /*$this->publishes([
                 __DIR__.'/../resources/views' => resource_path('views/vendor/processton-user'),
