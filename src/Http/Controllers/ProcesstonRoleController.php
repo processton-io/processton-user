@@ -144,7 +144,7 @@ class ProcesstonRoleController
                     ProcesstonInteraction::generateRow([
                         ProcesstonForm::generateForm(
                             'Edit Role '.$role->name,
-                            route('processton-app-role.edit',[ 'id' => $id ]),
+                            route('processton-app-user-role.edit',[ 'id' => $id ]),
                             ProcesstonForm::generateFormSchema(
                                 'Edit Role '.$role->name,
                                 'edit',
