@@ -1,7 +1,7 @@
 {
     "name": "processton-io/processton-user",
     "description": "Processton Interactions to manage users",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "keywords": [
         "processton",
         "processton-user"

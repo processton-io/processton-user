@@ -46,7 +46,7 @@ class ProcesstonRoleController
         if($request->method() == 'POST'){
 
             $requestData = $request->validate([
-                'name' => 'required|string|max:255|unique:Role'
+                'name' => 'required|string|max:255|unique:roles'
             ]);
 
             $role = Role::create([
@@ -112,10 +112,10 @@ class ProcesstonRoleController
         if($request->method() == 'POST'){
 
             $requestData = $request->validate([
-                'name' => 'required|string|max:255|unique:Role'
+                'name' => 'required|string|max:255|unique:roles'
             ]);
 
-            $role = $role->__set('name' , $requestData['name']);
+            $role->__set('name' , $requestData['name']);
 
             $role->save();
 
