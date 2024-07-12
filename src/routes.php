@@ -13,6 +13,8 @@ Route::middleware([
     Route::any('/invite', [ProcesstonUserController::class, 'invite'])->name('processton-app-user.invite');
     Route::any('/block', [ProcesstonUserController::class, 'blockUser'])->name('processton-app-user.block');
     Route::any('/un-block', [ProcesstonUserController::class, 'allowUser'])->name('processton-app-user.un_block');
+    Route::any('/change-role', [ProcesstonUserController::class, 'changeRole'])->name('processton-app-user.change_role');
+    
 
     Route::prefix('role')->group(function () {
         Route::get('/list', [ProcesstonRoleController::class, 'index'])->name('processton-app-user-roles.index');

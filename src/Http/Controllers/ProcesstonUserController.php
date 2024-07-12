@@ -60,12 +60,9 @@ class ProcesstonUserController
                 ]
             ], $data, false, true, true, [], [], [
                 [
-                    'type' => 'link',
-                    'label' => 'Edit',
-                    'action' => route('processton-client.app.interaction', [
-                        'app_slug' => 'setup',
-                        'interaction_slug' => 'user-edit'
-                    ]),
+                    'type' => 'model',
+                    'label' => 'Change Role',
+                    'action' => '/users/change-role',
                     'attachments' => [
                         [
                             'key' => 'id',
@@ -382,6 +379,90 @@ class ProcesstonUserController
                         )
                     ],
                         ProcesstonInteraction::width(12, 12, 12)),
+                ]
+            )
+        ]);
+    }
+
+    public function changeRole(Request $request): JsonResponse
+    {
+
+        $id = $request->get('id', false);
+
+        $model = config('auth.providers.users.model');
+
+        $user = $model::with('role')->findOrFail($id);
+
+        if ($request->method() == 'POST') {
+
+
+            $requestData = $request->validate([
+                'role_id' => 'required'
+            ]);
+
+            $user->__set('role_id', $requestData['role_id']['value']);
+            $user->save();
+
+
+            return response()->json([
+                'next' => [
+                    'type' => 'redirect',
+                    'action' => route('processton-client.app.interaction', [
+                        'app_slug' => 'setup',
+                        'interaction_slug' => 'users'
+                    ])
+                ],
+                'message' => 'User role been updated'
+            ]);
+        }
+
+        return response()->json([
+            'interaction' => ProcesstonInteraction::generateInteraction(
+                'Dashboard',
+                'dashboard',
+                'Dashboard',
+                'dashboard',
+                [],
+                [],
+                [
+                    ProcesstonInteraction::generateRow(
+                        [
+                            ProcesstonForm::generateForm(
+                                'Edit Role for '.$user->name,
+                                route('processton-app-user.change_role', [
+                                    'id' => $user->id
+                                ]),
+                                ProcesstonForm::generateFormSchema(
+                                    'Edit Role for '.$user->name,
+                                    'edit',
+                                    ProcesstonForm::generateFormRows(
+                                        ProcesstonForm::generateFormRow([
+                                            ProcesstonForm::generateFormRowElement(
+                                                'Role',
+                                                'simple_select',
+                                                'role_id',
+                                                '',
+                                                true,
+                                                'Please select role of new user',
+                                                [],
+                                                Role::all()->map(function ($role) {
+                                                    return [
+                                                        'value' => $role->id,
+                                                        'label' => $role->name
+                                                    ];
+                                                })
+                                            )
+                                        ])
+                                    )
+                                ),
+                                $user->toArray(),
+                                [],
+                                '',
+                                ProcesstonInteraction::width(12, 12, 12)
+                            )
+                        ],
+                        ProcesstonInteraction::width(12, 12, 12)
+                    ),
                 ]
             )
         ]);
