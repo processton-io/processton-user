@@ -28,7 +28,13 @@ class ProcesstonUserServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__.'/../Resolvers/' => app_path('Resolvers/User/'),
-            ], 'lang');
+            ], 'resolvers');
+            $this->publishes([
+                __DIR__.'/../Events/' => app_path('Events/'),
+            ], 'events');
+            $this->publishes([
+                __DIR__.'/../Notifications/' => app_path('Notifications/'),
+            ], 'notifications');
 
             // Publishing the views.
             /*$this->publishes([

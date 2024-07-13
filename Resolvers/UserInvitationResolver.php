@@ -1,11 +1,11 @@
 <?php
 namespace App\Resolvers\User;
-use Illuminate\Auth\Events\Registered;
+use App\Events\UserInvited;
 
 class UserInvitationResolver
 {
     public static function handle($user)
     {
-        event(new Registered($user));
+        event(new UserInvited($user));
     }
 }
