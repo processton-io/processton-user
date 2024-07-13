@@ -13,9 +13,9 @@ use Illuminate\Support\Str;
 
 class ProcesstonRoleController
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-
+        !$request->user()->hasPermission('admin.setup.roles') && abort(403, 'Unauthorized');
         $data = Role::paginate();
 
         return response()->json([
@@ -55,6 +55,7 @@ class ProcesstonRoleController
 
     public function addRole(Request $request): JsonResponse
     {
+        !$request->user()->hasPermission('admin.setup.roles.create') && abort(403, 'Unauthorized');
         if ($request->method() == 'POST') {
 
             $requestData = $request->validate([
@@ -118,6 +119,7 @@ class ProcesstonRoleController
 
     public function editRole(Request $request): JsonResponse
     {
+        !$request->user()->hasPermission('admin.setup.roles.edit') && abort(403, 'Unauthorized');
         $id = $request->get('id');
 
         $role = Role::findOrFail($id);

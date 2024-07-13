@@ -19,6 +19,8 @@ return new class extends Migration
             $table->tinyInteger('is_active')->default(1);
             $table->string('note')->nullable();
             $table->string('default_app')->nullable();
+            $table->string('password')->nullable()->change();
+            $table->string('invitation_token')->nullable();
         });
     }
 

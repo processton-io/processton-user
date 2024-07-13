@@ -274,37 +274,52 @@ return [
     'permission_mappings' => [
         'admin.setup.users' => [
             'category' => 'Admin',
-            'sub_category' => 'Setup',
+            'sub_category' => 'Users',
             'name' => 'Users List'
+        ],
+        'admin.setup.users.invite' => [
+            'category' => 'Admin',
+            'sub_category' => 'Users',
+            'name' => 'Invite User'
         ],
         'admin.setup.users.block' => [
             'category' => 'Admin',
-            'sub_category' => 'Setup',
+            'sub_category' => 'Users',
             'name' => 'Block User'
         ],
         'admin.setup.users.unblock' => [
             'category' => 'Admin',
-            'sub_category' => 'Setup',
+            'sub_category' => 'Users',
             'name' => 'Enable User'
+        ],
+        'admin.setup.users.changerole' => [
+            'category' => 'Admin',
+            'sub_category' => 'Users',
+            'name' => 'Change User Role'
         ],
         'admin.setup.users.resetpassword' => [
             'category' => 'Admin',
-            'sub_category' => 'Setup',
+            'sub_category' => 'Users',
             'name' => 'Reset Password Email'
         ],
         'admin.setup.roles' => [
             'category' => 'Admin',
-            'sub_category' => 'Setup',
+            'sub_category' => 'Roles',
             'name' => 'Roles'
+        ],
+        'admin.setup.roles.edit.create' => [
+            'category' => 'Admin',
+            'sub_category' => 'Roles',
+            'name' => 'Create Role'
         ],
         'admin.setup.roles.edit' => [
             'category' => 'Admin',
-            'sub_category' => 'Setup',
+            'sub_category' => 'Roles',
             'name' => 'Edit Role'
         ],
         'admin.setup.roles.permissions' => [
             'category' => 'Admin',
-            'sub_category' => 'Setup',
+            'sub_category' => 'Roles',
             'name' => 'Edit Role Permission'
         ],
     ]

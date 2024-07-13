@@ -10,11 +10,13 @@ use Processton\ProcesstonInteraction\ProcesstonInteraction;
 use Processton\ProcesstonInteraction\ProcesstonInteractionWidth;
 use Processton\ProcesstonUser\Models\Role;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class ProcesstonUserController
 {
-    public function index() : JsonResponse
+    public function index(Request $request) : JsonResponse
     {
+        !$request->user()->hasPermission('admin.setup.users') && abort(403, 'Unauthorized');
         $model = config('auth.providers.users.model');
         $data = $model::with('role')->paginate();
 
@@ -72,6 +74,17 @@ class ProcesstonUserController
                 ],
                 [
                     'type' => 'model',
+                    'label' => 'Change Password',
+                    'action' => '/users/change-password',
+                    'attachments' => [
+                        [
+                            'key' => 'id',
+                            'value' => 'id'
+                        ]
+                    ]
+                ],
+                [
+                    'type' => 'model',
                     'label' => 'Block',
                     'action' => '/users/block',
                     'color' => 'dangerous',
@@ -114,6 +127,7 @@ class ProcesstonUserController
 
     public function invite(Request $request) : JsonResponse
     {
+        !$request->user()->hasPermission('admin.setup.users.invite') && abort(403, 'Unauthorized');
         if($request->method() == 'POST'){
 
             $model = config('auth.providers.users.model');
@@ -126,11 +140,11 @@ class ProcesstonUserController
 
             $user = $model::create([
                 'name' => $requestData['name'],
-                'email' => $requestData['email'],
-                'password' => bcrypt(Str::random(8))
+                'email' => $requestData['email']
             ]);
 
             $user->__set('role_id', $requestData['role']['value']);
+            $user->__set('invitation_token', Str::random(60));
             $user->save();
 
             $resolver = config('module-user.resolvers.user-invitation', false);
@@ -203,46 +217,10 @@ class ProcesstonUserController
         ]);
     }
 
-    public function resetPassword(): JsonResponse
-    {
-        $model = config('auth.providers.users.model');
-        $data = $model::paginate();
-
-        return response()->json([
-            'data' => ProcesstonDataTable::generateDataTableData([
-                [
-                    'value' => 'name',
-                    'label' => 'Profile',
-                    'type' => 'info_with_ui_avatars',
-                    'config' => [
-                        'mapping' => [
-                            'name' => 'name',
-                            'email' => 'email',
-                            'description' => 'role'
-                        ]
-                    ]
-                ]
-            ], $data, false, true, true, [], [], [
-                [
-                    'type' => 'inner_link',
-                    'label' => 'Edit',
-                    'action' => route('processton-client.app.interaction', [
-                        'app_slug' => 'setup',
-                        'interaction_slug' => 'user-edit'
-                    ]),
-                    'attachments' => [
-                        [
-                            'key' => 'id',
-                            'value' => 'id'
-                        ]
-                    ]
-                ]
-            ])
-        ]);
-    }
-
     public function allowUser(Request $request): JsonResponse
     {
+        !$request->user()->hasPermission('admin.setup.users.unblock') && abort(403, 'Unauthorized');
+
         $id = $request->get('id', false);
         
         $model = config('auth.providers.users.model');
@@ -313,6 +291,8 @@ class ProcesstonUserController
 
     public function blockUser(Request $request): JsonResponse
     {
+        !$request->user()->hasPermission('admin.setup.users.block') && abort(403, 'Unauthorized');
+
         $id = $request->get('id', false);
 
         $model = config('auth.providers.users.model');
@@ -386,6 +366,7 @@ class ProcesstonUserController
 
     public function changeRole(Request $request): JsonResponse
     {
+        !$request->user()->hasPermission('admin.setup.users.changerole') && abort(403, 'Unauthorized');
 
         $id = $request->get('id', false);
 
@@ -456,6 +437,140 @@ class ProcesstonUserController
                                     )
                                 ),
                                 $user->toArray(),
+                                [],
+                                '',
+                                ProcesstonInteraction::width(12, 12, 12)
+                            )
+                        ],
+                        ProcesstonInteraction::width(12, 12, 12)
+                    ),
+                ]
+            )
+        ]);
+    }
+
+    public function changePassword(Request $request): JsonResponse
+    {
+        !$request->user()->hasPermission('admin.setup.users.changepassword') && abort(403, 'Unauthorized');
+
+        $id = $request->get('id', false);
+
+        $model = config('auth.providers.users.model');
+
+        $user = $model::findOrFail($id);
+        
+        if ($request->method() == 'POST') {
+            
+            $requestData = $request->validate([
+                'method' => 'required'
+            ]);
+
+            if($requestData['method']['value'] == 'manual'){
+                $requestData = $request->validate([
+                    'password' => 'required|confirmed'
+                ]);
+                $user->__set('password', Hash::make($requestData['password']));
+                $user->save();
+            }
+
+            $resolver = config('module-user.resolvers.user-change-password', false);
+
+            if ($resolver !== false) {
+                $resolver::handle($user, $requestData['method']['value']);
+            }
+
+
+            return response()->json([
+                'next' => [
+                    'type' => 'redirect',
+                    'action' => route('processton-client.app.interaction', [
+                        'app_slug' => 'setup',
+                        'interaction_slug' => 'users'
+                    ])
+                ],
+                'message' => 'Request processed'
+            ]);
+        }
+
+        return response()->json([
+            'interaction' => ProcesstonInteraction::generateInteraction(
+                'Dashboard',
+                'dashboard',
+                'Dashboard',
+                'dashboard',
+                [],
+                [],
+                [
+                    ProcesstonInteraction::generateRow(
+                        [
+                            ProcesstonForm::generateForm(
+                                'Edit Password for ' . $user->name,
+                                route('processton-app-user.change_password', [
+                                    'id' => $user->id
+                                ]),
+                                ProcesstonForm::generateFormSchema(
+                                    'Edit Password for ' . $user->name,
+                                    'submit',
+                                    ProcesstonForm::generateFormRows(
+                                        ProcesstonForm::generateFormRow([
+                                            ProcesstonForm::generateFormRowElement(
+                                                'Method',
+                                                'simple_select',
+                                                'method',
+                                                '',
+                                                true,
+                                                'How do you want to proceed',
+                                                [],
+                                                [
+                                                    [
+                                                        'value' => 'email',
+                                                        'label' => 'Send email'
+                                                    ],
+                                                    [
+                                                        'value' => 'manual',
+                                                        'label' => 'Manual'
+                                                    
+                                                    ]
+                                                ]
+                                            ),
+                                            ProcesstonForm::generateFormRowElement(
+                                                'Password',
+                                                'password',
+                                                'password',
+                                                '',
+                                                true,
+                                                '',
+                                                [
+                                                    [
+                                                        'key' => 'method.value',
+                                                        'operator' => 'EQUALS',
+                                                        'value' => 'manual'
+                                                    ]
+                                                ],
+                                                []
+                                            ),
+                                            ProcesstonForm::generateFormRowElement(
+                                                'Confirm password',
+                                                'password',
+                                                'password_confirmation',
+                                                '',
+                                                true,
+                                                '',
+                                                [
+                                                    [
+                                                        'key' => 'method.value',
+                                                        'operator' => 'EQUALS',
+                                                        'value' => 'manual'
+                                                    ]
+                                                ],
+                                                []
+                                            )
+                                        ])
+                                    )
+                                ),
+                                [
+                                    'method' => 'manual'
+                                ],
                                 [],
                                 '',
                                 ProcesstonInteraction::width(12, 12, 12)

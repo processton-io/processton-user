@@ -17,6 +17,8 @@ class ProcesstonPermissionController
 {
     public function index(Request $request) : JsonResponse
     {
+        !$request->user()->hasPermission('admin.setup.roles.permissions') && abort(403, 'Unauthorized');
+
         $id = $request->get('id');
 
         $role = Role::findOrFail($id);
@@ -107,8 +109,9 @@ class ProcesstonPermissionController
     }
 
 
-    public function scanForPermissions(){
+    public function scanForPermissions(Request $request){
 
+        !$request->user()->hasPermission('admin.setup.roles.permissions') && abort(403, 'Unauthorized');
 
         $applications = config('processton-app-setup.apps');
 

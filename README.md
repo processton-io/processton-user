@@ -94,6 +94,10 @@ This module uses three Primary models
 -   Role
 -   Permission
 
+```php
+Remember First Role always have all permissions.
+```
+
 ### Testing
 
 testing is not available for this module yet.

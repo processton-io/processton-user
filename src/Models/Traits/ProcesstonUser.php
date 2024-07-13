@@ -1,6 +1,6 @@
 <?php
 
-namespace Processton\ProcesstonUser\Models\Trait;
+namespace Processton\ProcesstonUser\Models\Traits;
 
 use Processton\ProcesstonUser\Models\Permission;
 use Processton\ProcesstonUser\Models\Role;
@@ -14,19 +14,18 @@ Trait ProcesstonUser
     }
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, 'user_permissions', 'user_id', 'permission_id');
+        return $this->role->permissions();
     }
-    public function havePermission($permissionName){
+    public function hasPermission($permissionName){
 
-        $userPermissionsQuery = $this->permissions()->where(['key', $permissionName]);
-
-        if($userPermissionsQuery->count() > 0){
+        
+        if($this->role->hasPermissionTo($permissionName)){
 
             return true;
 
         }else{
             //Might be permission is not mapped so far
-            $permissionQuery = Permission::where(['key', $permissionName]);
+            $permissionQuery = Permission::where(['key' => $permissionName]);
 
             if($permissionQuery->count() <= 0){
 
@@ -36,10 +35,14 @@ Trait ProcesstonUser
                     'key' => $permissionName,
                     'category' => array_key_exists('category', $mapping) ? $mapping['category'] : 'Uncategorized',
                     'sub_category' => array_key_exists('sub_category', $mapping) ? $mapping['sub_category'] : 'not defined',
-                    'name' => array_key_exists('name', $mapping) ? $mapping['name'] : $permission,
+                    'name' => array_key_exists('name', $mapping) ? $mapping['name'] : $permissionName,
                 ]);
 
             }
+        }
+
+        if($this->role->id == 1){
+            return true;
         }
 
         return false;
